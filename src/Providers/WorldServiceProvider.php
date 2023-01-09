@@ -3,7 +3,7 @@
 namespace Kinatech\World\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use World;
+use Kinatech\World\World;
 
 class WorldServiceProvider extends ServiceProvider
 {
