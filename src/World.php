@@ -1,5 +1,7 @@
 <?php
 
+namespace Kinatech\World;
+
 use Illuminate\Database\Eloquent\Builder;
 use Kinatech\World\Models\City;
 use Kinatech\World\Models\Country;

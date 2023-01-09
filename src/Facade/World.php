@@ -1,7 +1,7 @@
 <?php
 
 
-namespace KTL\Sigma\Facade;
+namespace inatech\World\Facade;
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Database\Eloquent\Builder;
