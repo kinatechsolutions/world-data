@@ -1,7 +1,7 @@
 <?php
 
 
-namespace inatech\World\Facade;
+namespace Kinatech\World\Facade;
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Database\Eloquent\Builder;
