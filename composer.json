@@ -1,0 +1,27 @@
+{
+    "name": "kinatechsolutions/world-data",
+    "description": "World data package includes, countries, states, cities, currencies and languages",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Michael Kamau",
+            "email": "michaelkinare@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kinatech\\World\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kinatech\\World\\Providers\\WorldServiceProvider"
+            ]
+        }
+    }
+}
