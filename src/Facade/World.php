@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class World extends Facade
 {
-
     protected static function getFacadeAccessor(): string
     {
         return 'world';

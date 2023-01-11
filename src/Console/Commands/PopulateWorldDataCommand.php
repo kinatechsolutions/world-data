@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Kinatech\World\Console\Commands;
 
-use App\Models\City;
-use App\Models\Country;
-use App\Models\Currency;
-use App\Models\Language;
-use App\Models\State;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Kinatech\World\Models\City;
+use Kinatech\World\Models\Country;
+use Kinatech\World\Models\Currency;
+use Kinatech\World\Models\Language;
+use Kinatech\World\Models\PostalCode;
+use Kinatech\World\Models\State;
 
 class PopulateWorldDataCommand extends Command
 {
@@ -24,14 +25,14 @@ class PopulateWorldDataCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Populate world models with data';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         try {
             $extension = $this->argument('type');
@@ -42,15 +43,17 @@ class PopulateWorldDataCommand extends Command
                 Country::class => __DIR__ . "/../../Data/countries." . $extension,
                 State::class => __DIR__ . "/../../Data/states." . $extension,
                 City::class => __DIR__ . "/../../Data/cities." . $extension,
+                PostalCode::class => __DIR__ . "/../../Data/postal_codes." . $extension,
             ];
 
             $count = 1;
 
-            $this->comment('Data populations started');
+            $this->comment('Starting');
+
+            $progress = $this->output->createProgressBar(count($data));
+            $progress->start();
 
             foreach ($data as $model => $list) {
-
-                $this->info("    " . $count . '. Populating ' . $model);
 
                 if ($extension === 'sql') {
 
@@ -58,15 +61,14 @@ class PopulateWorldDataCommand extends Command
                     $dbPassword = env('DB_PASSWORD');
                     $dbName = env('DB_DATABASE');
 
-                    exec("mysql -u  $dbUser -p $dbPassword  $dbName < $list");
+                    exec("mysql -u  $dbUser --password=$dbPassword  $dbName < $list");
+
+                    $progress->advance();
+
                     continue;
                 }
 
                 $list = json_decode(file_get_contents($list), true);
-
-                $progress = $this->output->createProgressBar(count($list));
-                $progress->setMessage('Populating ' . $model);
-                $progress->start();
 
                 foreach ($list as $item) {
                     $modelKeys = [];
@@ -90,11 +92,14 @@ class PopulateWorldDataCommand extends Command
                 $count++;
             }
 
-            $this->comment('Populating data completed');
+            $this->line('');
+            $this->comment('Completed');
 
-            return Command::SUCCESS;
+            return static::SUCCESS;
+
         } catch (\Exception $exception) {
-            $this->error(Str::limit($exception->getMessage(), 100));
+            $this->error(Str::limit($exception->getMessage(), 100) . "....");
+            return static::FAILURE;
         }
     }
 }
