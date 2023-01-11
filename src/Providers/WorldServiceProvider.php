@@ -2,8 +2,10 @@
 
 namespace Kinatech\World\Providers;
 
+use App\Console\Commands\PopulateWorldDataCommand;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
-use World;
+use Kinatech\World\World;
 
 class WorldServiceProvider extends ServiceProvider
 {
@@ -26,13 +28,18 @@ class WorldServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        /* Load routes */
+        AboutCommand::add('World Data', fn() => ['Version' => '1.0.0']);
+
+        if ($this->app->runningInConsole()){
+            $this->commands([
+                PopulateWorldDataCommand::class
+            ]);
+        }
+
         $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
 
-        /* load migrations */
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
 
-        /* publish migrations */
         $this->publishes([
             __DIR__.'/../Database/migrations/' => database_path('migrations')
         ], 'migrations');
